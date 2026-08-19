@@ -1,0 +1,5 @@
+1. Web Application vs Web API
+2. Client Server Architecture (HttpRequest/Response)
+3. HttP Methods 
+Get , Post , Put , Delete , Patch
+
