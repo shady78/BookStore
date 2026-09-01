@@ -3,3 +3,38 @@
 3. HttP Methods 
 Get , Post , Put , Delete , Patch
 
+
+
+Repo 
+ApplicationDbCotext 
+DbSet<TEntity>  
+
+
+// Dto 
+Name,
+
+Service (DTO) , Repo (Entity), Controller(Service)
+DTO 
+
+Service Layer:
+	map = Dto into Entity 
+	Repo (map) 
+
+
+
+Service Done 
+
+ToDo:
+Service LifeTime 
+Read data from json file (appSettings) 
+	we have 2 ways direct , Option pattern
+async await CancellationToken
+
+ORM (EF Core) 
+	Dapper , Marten(document)
+
+
+
+السبت والثلاثاء
+بعد المغرب
+الثلاثاء : بعد العشاء
