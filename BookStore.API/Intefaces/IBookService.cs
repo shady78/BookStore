@@ -4,10 +4,10 @@ namespace BookStore.API.Intefaces
 {
     public interface IBookService
     {
-        IEnumerable<BookResponse> GetAll();
-        ServiceResult<BookResponse> GetById(int id);
-        ServiceResult<BookResponse> Create(CreateBookRequest request);
-        ServiceResult<bool> Update(int id, UpdateBookRequest request);
-        ServiceResult<bool> Delete(int id);
+        Task<IEnumerable<BookResponse>> GetAllAsync(CancellationToken cancellation=default);
+        Task<ServiceResult<BookResponse>> GetByIdAsync(int id, CancellationToken cancellation = default);
+        Task<ServiceResult<BookResponse>> CreateAsync(CreateBookRequest request, CancellationToken cancellation = default);
+        Task<ServiceResult<bool>> UpdateAsync(int id, UpdateBookRequest request, CancellationToken cancellation = default);
+        Task<ServiceResult<bool>> DeleteAsync(int id, CancellationToken cancellation = default);
     }
 }

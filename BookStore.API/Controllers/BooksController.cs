@@ -8,19 +8,18 @@ namespace BookStore.API.Controllers
     // Filter 
     public class BooksController(IBookService _bookService) : ControllerBase
     {
-
         // GET api/books
         [HttpGet]
-        public ActionResult<IEnumerable<BookResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<BookResponse>>> GetAll(CancellationToken cancellation)
         {
-            return Ok(_bookService.GetAll());
+            return Ok(await _bookService.GetAllAsync(cancellation));
         }
 
         // GET api/books/1
         [HttpGet("{id:int}")]
-        public ActionResult<BookResponse> Get(int id)
+        public async Task<ActionResult<BookResponse>> Get(int id, CancellationToken cancellation)
         {
-            var book = _bookService.GetById(id);
+            var book = await _bookService.GetByIdAsync(id, cancellation);
             return book.Success ?
                 Ok(book.Data)
                 : NotFound(new { message = book.ErrorMessage });
@@ -28,9 +27,10 @@ namespace BookStore.API.Controllers
 
         // Post api/books
         [HttpPost]
-        public ActionResult<BookResponse> Create(CreateBookRequest request)
+        public async Task<ActionResult<BookResponse>> Create(CreateBookRequest request,
+            CancellationToken cancellation)
         {
-           var result = _bookService.Create(request);
+            var result = await _bookService.CreateAsync(request, cancellation);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -45,9 +45,10 @@ namespace BookStore.API.Controllers
 
         // PUT api/book/1
         [HttpPut("{id:int}")]
-        public IActionResult Update(int id, [FromBody] UpdateBookRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookRequest request,
+            CancellationToken cancellation)
         {
-            var result = _bookService.Update(id, request);
+            var result = await _bookService.UpdateAsync(id, request, cancellation);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -59,13 +60,13 @@ namespace BookStore.API.Controllers
 
         // Delete api/book/1
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
-            var result =_bookService.Delete(id);
-            return result.Success 
+            var result = await _bookService.DeleteAsync(id, cancellation);
+            return result.Success
                 ? NoContent() : NotFound(new { message = result.ErrorMessage });
         }
 
-     
+
     }
 }

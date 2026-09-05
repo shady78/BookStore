@@ -27,14 +27,37 @@ Service Done
 ToDo:
 Service LifeTime 
 Read data from json file (appSettings) 
-	we have 2 ways direct , Option pattern
-async await CancellationToken
+	we have 2 ways direct , Option pattern (done)
+async await CancellationToken (done)
+
+
 
 ORM (EF Core) 
 	Dapper , Marten(document)
-
+// Select * from Books where id = 5
+// _context.Books.FirstOrDefault(b => b.Id == 5)
 
 
 السبت والثلاثاء
 بعد المغرب
 الثلاثاء : بعد العشاء
+
+
+
+
+Service LifeTime
+Singleton
+Scoped 
+Transient 
+
+Captive Dependency
+Singelton can not inject scoped object
+we can solve this problem by inject this object in method param
+
+
+
+ToDo:
+IEnumerable vs IQueryable 
+AsNotracking 
+
+Entities , Configurations , RelationShips , 

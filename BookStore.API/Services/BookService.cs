@@ -1,29 +1,37 @@
-﻿using BookStore.API.Intefaces;
+﻿using BookStore.API.Configuration;
+using BookStore.API.Data;
+using BookStore.API.Intefaces;
+using BookStore.API.Mappings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BookStore.API.Services
 {
     public class BookService : IBookService
     {
-        private static readonly List<Book> Books = new()
-          {
-              new Book{Id = 1 , Title="Clean Code", Author = "Robert C.Marten",
-              Price = 250.00m, StockQuantity= 12}
-          };
-        private static int _nextId = 2;
+        private readonly BookStoreDbContext _context;
 
-        public IEnumerable<BookResponse> GetAll()
+        public BookService(BookStoreDbContext context)
         {
-            return Books.Select(MapToResponse);
+            _context = context;
         }
 
-        public ServiceResult<BookResponse> GetById(int id)
+        public async Task<IEnumerable<BookResponse>> GetAllAsync(CancellationToken cancellation = default)
         {
-            var book = Books.FirstOrDefault(b => b.Id == id);
+            // Modified , Added , Deleted  , NoChange
+            var books = await _context.Books.AsNoTracking()
+                  .ToListAsync();
+            return books.ToResponseList();
+        }
+
+        public async Task<ServiceResult<BookResponse>> GetByIdAsync(int id, CancellationToken cancellation)
+        {
+            var book = await _context.Books.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
             return book is null ?
                 ServiceResult<BookResponse>.Fail(errorMessage: "Book not found") :
-                ServiceResult<BookResponse>.Ok(MapToResponse(book));
+                ServiceResult<BookResponse>.Ok(book.ToRespose());
         }
-        public ServiceResult<BookResponse> Create(CreateBookRequest request)
+        public async Task<ServiceResult<BookResponse>> CreateAsync(CreateBookRequest request, CancellationToken cancellation)
         {
             if (string.IsNullOrWhiteSpace(request.Title))
             {
@@ -33,59 +41,41 @@ namespace BookStore.API.Services
             {
                 return ServiceResult<BookResponse>.Fail(errorMessage: "Price must be greater than zero.");
             }
-            var book = new Book()
-            {
-                Id = _nextId,
-                Title = request.Title,
-                Price = request.Price,
-                StockQuantity = request.StockQuantity,
-                Author = request.Author
-            };
-            Books.Add(book);
-
-            return ServiceResult<BookResponse>.Ok(MapToResponse(book));
+            var book = request.ToEntity();
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync(cancellation);
+            return ServiceResult<BookResponse>.Ok(book.ToRespose());
         }
 
-        public ServiceResult<bool> Delete(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id, CancellationToken cancellation)
         {
-            var book = Books.FirstOrDefault(b => b.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book is null)
                 ServiceResult<BookResponse>.Fail(errorMessage: "Book not found");
 
-            Books.Remove(book!);
+            _context.Books.Remove(book!);
+            await _context.SaveChangesAsync(cancellation);
             return ServiceResult<bool>.Ok(true);
         }
 
 
-        public ServiceResult<bool> Update(int id, UpdateBookRequest request)
+        public async Task<ServiceResult<bool>> UpdateAsync(int id, UpdateBookRequest request, CancellationToken cancellation)
         {
-            var book = Books.FirstOrDefault(b => b.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book is null)
                 return ServiceResult<bool>.Fail(errorMessage: "Book not found");
 
             if (string.IsNullOrWhiteSpace(request.Title))
             {
-                return ServiceResult<bool>.Fail(errorMessage:"Title is required.");
+                return ServiceResult<bool>.Fail(errorMessage: "Title is required.");
             }
             if (request.Price <= 0)
             {
                 return ServiceResult<bool>.Fail(errorMessage: "Price must be greater than zero.");
             }
-            book.Title = request.Title;
-            book.Author = request.Author;
-            book.Price = request.Price;
-            book.StockQuantity = request.StockQuantity;
-
+            book.ApplyUpdate(request);
+            await _context.SaveChangesAsync(cancellation);
             return ServiceResult<bool>.Ok(true);
         }
-
-        private static BookResponse MapToResponse(Book book) => new()
-        {
-            Id = book.Id,
-            Title = book.Title,
-            Author = book.Author,
-            StockQuantity = book.StockQuantity,
-            Price = book.Price,
-        };
     }
 }
