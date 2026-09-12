@@ -57,7 +57,27 @@ we can solve this problem by inject this object in method param
 
 
 ToDo:
-IEnumerable vs IQueryable 
+IEnumerable vs IQueryable done
 AsNotracking 
 
 Entities , Configurations , RelationShips , 
+
+Author 1 write N books
+Book N belong N category (1 to N BookCategory)
+Category (1 to N BookCategory)
+BookCategory
+
+
+// Apply IEntityTypeConfiguration
+// add migraitons and Update database
+// Apply Include and thenInclude and Update BookResponse and MappingsExtensions
+
+
+ToDo:
+Seed Data (we will use OnModelCreating)
+Create Dtos 
+and make manualMappingExtensions
+Projections 
+validation (by use FluentValidation)
+Global Exception Handleing (we can use Handler) , ProblemDetails 
+Generic API Response

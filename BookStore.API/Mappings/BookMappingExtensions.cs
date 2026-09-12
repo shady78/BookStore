@@ -7,10 +7,13 @@
             return new BookResponse
             {
                 Id = book.Id,
-                Author = book.Author,
+                Author = book.Author.Name,
                 Title = book.Title,
                 Price = book.Price,
-                StockQuantity = book.StockQuantity
+                StockQuantity = book.StockQuantity,
+                Categories = book.BookCategories
+                            .Select(bc => bc.Category.Name)
+                            .ToList()
             };
         }
         public static IEnumerable<BookResponse> ToResponseList(this IEnumerable<Book> books)
@@ -23,7 +26,7 @@
             return new Book
             {
                 Title = request.Title,
-                Author = request.Author,
+                //Author = request.Author,
                 Price = request.Price,
                 StockQuantity = request.StockQuantity
             };
@@ -31,7 +34,7 @@
         public static void ApplyUpdate(this Book book, UpdateBookRequest request)
         {
             book.Title = request.Title;
-            book.Author = request.Author;
+            //book.Author = request.Author;
             book.Price = request.Price;
             book.StockQuantity = request.StockQuantity;
         }
