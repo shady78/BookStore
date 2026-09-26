@@ -75,9 +75,26 @@ BookCategory
 
 ToDo:
 Seed Data (we will use OnModelCreating)
-Create Dtos 
-and make manualMappingExtensions
+Client => Controller (RequetDto) => Response Dto => Service send entity to Database
+
+Create Dtos (pagedResult)
+Exception class (Global Exception)
+
+
+ToDo: we will complete full crud with apply exceptions (Fluent Validation)
+- Generic ApiResponse
+and make apply manualMappingExtensions
 Projections 
 validation (by use FluentValidation)
 Global Exception Handleing (we can use Handler) , ProblemDetails 
 Generic API Response
+
+
+ToDo:
+Handler Exception
+- ApiController Behavior make return ApiResponse   (ActionFilter)
+- register  fluentvalidation 
+- business 
+
+
+Task : make crud Category and BookController return ApiResponse

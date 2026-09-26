@@ -6,3 +6,8 @@ global using BookStore.API.Configuration;
 global using BookStore.API.Intefaces;
 global using BookStore.API.Services;
 
+global using BookStore.API.Data;
+global using BookStore.API.Exceptions;
+global using BookStore.API.Mappings;
+global using Microsoft.EntityFrameworkCore;
+

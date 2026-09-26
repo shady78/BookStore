@@ -1,6 +1,7 @@
 ﻿using BookStore.API.Data;
 using BookStore.API.Mappings;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BookStore.API.Services
 {
@@ -94,6 +95,66 @@ namespace BookStore.API.Services
             book.ApplyUpdate(request);
             await _context.SaveChangesAsync(cancellation);
             return ServiceResult<bool>.Ok(true);
+        }
+
+        public async Task<PagedResult<BookResponse>> GetAllWithQueryAsync(
+            BookQueryParamters parameters,
+            CancellationToken cancellation = default)
+        {
+            var query = _context.Books.AsNoTracking().
+                 Include(b => b.Author)
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search))
+            {
+                var search = parameters.Search.Trim();
+                query = query.Where(b => b.Title.Contains(search));
+            }
+            if (parameters.AuthorId.HasValue)
+            {
+                query = query.Where(b => b.AuthorId
+                == parameters.AuthorId.Value);
+            }
+            if (parameters.CategoryId.HasValue)
+            {
+                query = query.Where(b => b.BookCategories.Any(
+                    bc => bc.CategoryId == parameters.CategoryId.Value));
+            }
+            if (parameters.MinPrice.HasValue)
+            {
+                query = query.Where(b => b.Price >= parameters.MinPrice.Value);
+            }
+            if (parameters.MaxPrice.HasValue)
+            {
+                query = query.Where(b => b.Price <= parameters.MaxPrice.Value);
+            }
+            var totalCount = await query.CountAsync(cancellation);
+
+            query = ApplySorting(query, parameters.SortBy, parameters.Descending);
+            // pageNumber = 4 , pageSize = 10  
+            var items = await query
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .Select(b => b.ToRespose())
+                .ToListAsync();
+
+            return new PagedResult<BookResponse>(
+                items, parameters.PageNumber, parameters.PageSize, totalCount);
+        }
+        // helper method
+        private static IQueryable<Book> ApplySorting(
+            IQueryable<Book> query, string? sortBy, bool descending)
+        {
+            Expression<Func<Book, object>> keySelector = sortBy?.ToLower() switch
+            {
+                "price" => b => b.Price,
+                "stock" => b => b.StockQuantity,
+                _ => b => b.Title
+            };
+            return descending ? query.OrderByDescending(keySelector) :
+                query.OrderBy(keySelector);
         }
     }
 }

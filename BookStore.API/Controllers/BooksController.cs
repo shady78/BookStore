@@ -1,4 +1,4 @@
-﻿using BookStore.API.Intefaces;
+﻿using BookStore.API.Common;
 
 namespace BookStore.API.Controllers
 {
@@ -12,7 +12,18 @@ namespace BookStore.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookResponse>>> GetAll(CancellationToken cancellation)
         {
-            return Ok(await _bookService.GetAllAsync(cancellation));
+            var books = await _bookService.GetAllAsync(cancellation);
+            return Ok(
+                ApiResponse<IEnumerable<BookResponse>>
+                .Success(books, "books retrieved successfully.")
+                );
+        }
+        [HttpGet("By-queryFilter")]
+        public async Task<ActionResult<PagedResult<BookResponse>>> GetAllAsync(
+         [FromQuery] BookQueryParamters parameters, CancellationToken cancellation)
+        {
+            var result = await _bookService.GetAllWithQueryAsync(parameters, cancellation);
+            return Ok(result);
         }
 
         // GET api/books/1

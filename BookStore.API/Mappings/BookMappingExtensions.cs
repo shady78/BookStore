@@ -7,7 +7,7 @@
             return new BookResponse
             {
                 Id = book.Id,
-                Author = book.Author.Name,
+                Author = book.Author.Name ?? string.Empty,
                 Title = book.Title,
                 Price = book.Price,
                 StockQuantity = book.StockQuantity,

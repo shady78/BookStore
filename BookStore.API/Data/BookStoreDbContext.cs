@@ -19,10 +19,7 @@ namespace BookStore.API.Data
             //// Author
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BookStoreDbContext).Assembly);
 
-
-
             // Task make All Configuraiton to implement IEntityTypeConfiguration
-
             //// Category
             modelBuilder.Entity<Category>(entity =>
             {
@@ -66,6 +63,50 @@ namespace BookStore.API.Data
                .OnDelete(DeleteBehavior.Cascade);
 
             });
+
+
+            // Seed Data 
+            modelBuilder.Entity<Author>().HasData(
+                new Author
+                {
+                    Id = 1,
+                    Bio = "Author of clean code",
+                    Name = "Robert " +
+                "C marten"
+                },
+                new Author
+                {
+                    Id = 2,
+                    Bio = "Co-author of the progrmatic Programmer.",
+                    Name = "Aundy hunt "
+                });
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Name="Software Engineering."},
+                new Category { Id = 2, Name="Best sellers."});
+
+            modelBuilder.Entity<Book>().HasData(
+                new Book
+                {
+                    Id = 1,
+                    Title = "Clean Code",
+                    Price = 250.00m,
+                    StockQuantity = 12,
+                    AuthorId = 1
+                },
+                new Book
+                {
+                    Id = 2,
+                    Title = "The Programtic Programmer",
+                    Price = 250.00m,
+                    StockQuantity = 12,
+                    AuthorId = 2
+                });
+
+            modelBuilder.Entity<BookCategory>().HasData(
+                new BookCategory { BookId = 1, CategoryId = 1 },
+                new BookCategory { BookId = 1, CategoryId = 2 },
+                new BookCategory { BookId = 2, CategoryId = 1 });
             base.OnModelCreating(modelBuilder);
         }
     }
