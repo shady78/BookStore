@@ -11,3 +11,7 @@ global using BookStore.API.Exceptions;
 global using BookStore.API.Mappings;
 global using Microsoft.EntityFrameworkCore;
 
+global using BookStore.API.Common;
+global using System.Net;
+global using System.Text.Json;
+

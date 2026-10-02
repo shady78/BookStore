@@ -4,6 +4,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ValidationFilter]
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorService _authorService;
