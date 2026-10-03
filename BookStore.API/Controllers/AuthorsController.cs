@@ -1,4 +1,5 @@
 ﻿using BookStore.API.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStore.API.Controllers
 {

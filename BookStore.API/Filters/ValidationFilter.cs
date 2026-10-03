@@ -1,10 +1,7 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace BookStore.API.Filters
+﻿namespace BookStore.API.Filters
 {
-    public class ValidationFilter : IAsyncActionFilter
+    public class ValidationFilter :
+        IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(
             ActionExecutingContext context,

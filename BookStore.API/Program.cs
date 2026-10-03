@@ -1,8 +1,10 @@
+using BookStore.API.Common.Settings;
 using BookStore.API.Data;
 using BookStore.API.Filters;
 using BookStore.API.Middlewares;
 using BookStore.API.Validation;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +21,23 @@ builder.Services.Configure<BookStoreSettings>(
 
 builder.Services.AddDbContext<BookStoreDbContext>(options =>
 options.UseSqlServer(connectionString));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    
+    options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<BookStoreDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddValidatorsFromAssemblyContaining
     <CreateAuthorRequestValidator>();
 builder.Services.AddScoped<ValidationFilter>();

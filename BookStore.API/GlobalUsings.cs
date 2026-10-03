@@ -15,3 +15,7 @@ global using BookStore.API.Common;
 global using System.Net;
 global using System.Text.Json;
 
+global using FluentValidation;
+global using FluentValidation.Results;
+global using Microsoft.AspNetCore.Mvc.Filters;
+

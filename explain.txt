@@ -98,3 +98,57 @@ Handler Exception
 
 
 Task : make crud Category and BookController return ApiResponse
+
+
+
+ToDo:
+- Identity + JWT + Register + Login + Swagger Auth
+- Authentication and Authorization
+- Role based Authorization , Permission based Authorization
+
+ASP .NET Core Identity 
+- PasswordHashing 
+- UserManger 
+- Role Manager
+- Password Rules
+- Lockout
+- Identity Tables .
+
+JWT => Json web token
+Authorization: Bearer <tokenValue>
+Access Token 
+, Refresh Token
+
+
+
+Register Flow :  (AuthController)
+Post /api/auth/register
+{
+	"username": "user1",
+	"email": 
+}
+AuthService.RegisterAsync(RegisterDto) => UserManger.CreateAsync(user, password) 
+TokenService.GenerateAccessToken(user)
+
+AuthResponse(data with access token)
+
+
+
+Login Flow :  (AuthController)
+Post /api/auth/login
+{
+	"username": "user1",
+	"password": "password"
+}
+AuthService.LoginAsync(LoginDto) => UserManger.CheckPasswordAsync(user, password)
+TokenService.GenerateAccessToken(user)
+
+AuthResponse(data with access token)
+
+
+
+ToDo: Validators about Auth
+Controller (AuthController)
+Authorization header with Bearer token
+Swagger Auth (Add JWT Bearer in Swagger)
+Test authorize all endpoints 
