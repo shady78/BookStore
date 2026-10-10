@@ -7,7 +7,7 @@
             ActionExecutingContext context,
             ActionExecutionDelegate next)
         {
-            var failures = new List<ValidationFailure>();
+            var failures = new List<FluentValidation.Results.ValidationFailure>();
 
             foreach (var argument in context.ActionArguments.Values)
             {

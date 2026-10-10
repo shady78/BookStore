@@ -9,5 +9,11 @@
         Task<AuthResponse> LoginAsync(
             LoginRequest request,
             CancellationToken cancellation = default);
+
+        Task<AuthResponse> RefreshTokenAsync(
+            RefreshTokenRequest request , CancellationToken cancellation = default);
+        Task RevokeRefreshTokenAsync(
+            RevokeRefreshToken request , CancellationToken cancellation = default);
+
     }
 }

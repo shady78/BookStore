@@ -1,21 +1,28 @@
-﻿global using Microsoft.AspNetCore.Mvc;
-global using BookStore.API.DTOs;
-global using BookStore.API.Models;
-
+﻿global using BookStore.API.Common;
+global using BookStore.API.Common.Settings;
 global using BookStore.API.Configuration;
-global using BookStore.API.Intefaces;
-global using BookStore.API.Services;
-
 global using BookStore.API.Data;
+global using BookStore.API.DTOs;
 global using BookStore.API.Exceptions;
+global using BookStore.API.Extensions;
+global using BookStore.API.Filters;
+global using BookStore.API.Intefaces;
 global using BookStore.API.Mappings;
-global using Microsoft.EntityFrameworkCore;
-
-global using BookStore.API.Common;
-global using System.Net;
-global using System.Text.Json;
-
+global using BookStore.API.Middlewares;
+global using BookStore.API.Models;
+global using BookStore.API.Services;
+global using BookStore.API.Validation;
 global using FluentValidation;
-global using FluentValidation.Results;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.Filters;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Options;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Net;
+global using System.Security.Claims;
+global using System.Text;
+global using System.Text.Json;
 

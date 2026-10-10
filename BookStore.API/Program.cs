@@ -1,12 +1,3 @@
-using BookStore.API.Common.Settings;
-using BookStore.API.Data;
-using BookStore.API.Filters;
-using BookStore.API.Middlewares;
-using BookStore.API.Validation;
-using FluentValidation;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -14,7 +5,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //var storeName = builder.Configuration["BookStoreSettings:StoreName"];
 //var maxPageSize = builder.Configuration.GetValue<int>("BookStoreSettings:MaxPageSize");
 
-
+var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
 // by use option Pattern
 builder.Services.Configure<BookStoreSettings>(
     builder.Configuration.GetSection(nameof(BookStoreSettings)));
@@ -33,6 +24,35 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<BookStoreDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings!.Issuer,
+
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
@@ -65,8 +85,8 @@ builder.Services.AddControllers(options =>
     };
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerConfiguration();
+
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 

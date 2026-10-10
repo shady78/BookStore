@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.API.Data
 {
@@ -14,7 +13,7 @@ namespace BookStore.API.Data
 
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<BookCategory> BookCategory => Set<BookCategory>();
-
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //// Author

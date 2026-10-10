@@ -4,5 +4,7 @@
     {
         Task<(string Token, DateTime ExpiresAt)> GenerateAccessTokenAsync
             (ApplicationUser user, CancellationToken cancellation = default);
+
+        RefreshToken GenerateRefreshToken();
     }
 }

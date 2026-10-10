@@ -141,14 +141,42 @@ Post /api/auth/login
 	"password": "password"
 }
 AuthService.LoginAsync(LoginDto) => UserManger.CheckPasswordAsync(user, password)
-TokenService.GenerateAccessToken(user)
+TokenService.GenerateAccessToken(user) + refresh token 
+Save Refresh token in DB
 
 AuthResponse(data with access token)
 
+Post /api/auth/refresh-token
+AuthController => AuthService.RefreshTokenAsync => IUserService (return user + refresh token )
+check token is active 
+generate new access token + new refresh token 
+revoke old refresh token , save new refresh token 
+Return Authresponse 
 
 
-ToDo: Validators about Auth
+CurrentUserService Flow 
+Client Send JWT => Authentication middleware validate token 
+HttpContext.User contains claims 
+currentUserService read UserId / email
+application service use current user 
+
+ToDo: 
 Controller (AuthController)
 Authorization header with Bearer token
 Swagger Auth (Add JWT Bearer in Swagger)
 Test authorize all endpoints 
+done
+
+
+60 minutes access token + create new access token 60 + logout
+refresh token 30 days 
+
+ToDo:
+Complete AuthController (refreshToken, revokeToken)
+CurrentUserService
+Add Middleware 
+Migration 
+Test 
+
+
+Validators about Auth
