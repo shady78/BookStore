@@ -27,6 +27,25 @@
                 .Success(response, "User logged in successfully."));
         }
 
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(
+            RefreshTokenRequest request,
+            CancellationToken cancellationToken)
+        {
+            var response = await _authService.RefreshTokenAsync(request, cancellationToken);
+            return Ok(ApiResponse<AuthResponse>.Success(
+                response,
+                "Token refreshed successfully."));
+        }
 
+        [HttpPost("revoke-refresh-token")]
+        public async Task<IActionResult> RevokeRefreshToken(
+            RevokeRefreshToken request, CancellationToken cancellation)
+        {
+            await _authService.RevokeRefreshTokenAsync(request, cancellation);
+            return Ok(ApiResponse<object>.Success(
+                null!,
+                "Refresh token revoked successfully."));
+        }
     }
 }

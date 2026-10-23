@@ -1,3 +1,5 @@
+using BookStore.API.Common.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -24,7 +26,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<BookStoreDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
 
 builder.Services
     .AddAuthentication(options =>
@@ -104,6 +108,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure Middleware pipline
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

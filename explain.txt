@@ -172,11 +172,21 @@ done
 refresh token 30 days 
 
 ToDo:
-Complete AuthController (refreshToken, revokeToken)
+Complete AuthController (refreshToken, revokeToken)  done but Y should handle revokeToken endpoint to return bool
 CurrentUserService
-Add Middleware 
 Migration 
 Test 
+done
+
+
+
+ToDo:
+Role-Based Authorization 
+Permission-Based Authorization foundation
+Custom Roles
+Assign Permissions to Roles 
+
 
 
 Validators about Auth
+Add Middleware 

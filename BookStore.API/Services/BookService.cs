@@ -1,4 +1,5 @@
-﻿using BookStore.API.Data;
+﻿using BookStore.API.Common.Interfaces;
+using BookStore.API.Data;
 using BookStore.API.Mappings;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -8,10 +9,11 @@ namespace BookStore.API.Services
     public class BookService : IBookService
     {
         private readonly BookStoreDbContext _context;
-
-        public BookService(BookStoreDbContext context)
+        private readonly ICurrentUserService _currentUserService;
+        public BookService(BookStoreDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         public async Task<IEnumerable<BookResponse>> GetAllAsync(CancellationToken cancellation = default)
@@ -26,7 +28,6 @@ namespace BookStore.API.Services
             // IEnumberable 
             //IEnumerable<Book> books = await _context.Books.ToListAsync(); // 10000
             // var expensiveBooks = books.Where(b => b.Price > 1000); // 10
-
 
 
             // Modified , Added , Deleted  , NoChange
@@ -52,6 +53,8 @@ namespace BookStore.API.Services
         }
         public async Task<ServiceResult<BookResponse>> CreateAsync(CreateBookRequest request, CancellationToken cancellation)
         {
+            //var currentUserId = _currentUserService.UserId;
+
             if (string.IsNullOrWhiteSpace(request.Title))
             {
                 return ServiceResult<BookResponse>.Fail(errorMessage: "Title is required.");

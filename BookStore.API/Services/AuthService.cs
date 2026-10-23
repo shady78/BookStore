@@ -106,6 +106,7 @@ namespace BookStore.API.Services
             };
         }
 
+        // ToDo: return bool data (true)
         public async Task RevokeRefreshTokenAsync(
             RevokeRefreshToken request,
             CancellationToken cancellation = default)
@@ -121,6 +122,10 @@ namespace BookStore.API.Services
                 .First(rt => rt.Token == request.RefreshToken);
 
             if (!refreshToken.IsActive)
+            {
+                return;
+            }
+            if (refreshToken.IsExpired)
             {
                 return;
             }
