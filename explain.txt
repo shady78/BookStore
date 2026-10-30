@@ -187,6 +187,19 @@ Custom Roles
 Assign Permissions to Roles 
 
 
+Role: HR Manager
+Permission:
+	Employees.View
+	Employees.Create
+	Departments.View
+
+Seed Permission as a Startup Code 
+Permission Seeder class (DBContext )
+call this class in Program.cs 
+
 
 Validators about Auth
 Add Middleware 
+
+
+// No Relation DB (Marten)

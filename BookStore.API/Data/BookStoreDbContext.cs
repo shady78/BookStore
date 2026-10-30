@@ -2,7 +2,7 @@
 
 namespace BookStore.API.Data
 {
-    public class BookStoreDbContext : IdentityDbContext<ApplicationUser>
+    public class BookStoreDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,string>
     {
         public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
             : base(options)
@@ -14,6 +14,9 @@ namespace BookStore.API.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<BookCategory> BookCategory => Set<BookCategory>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+        public DbSet<Permission> Permissions => Set<Permission>();
+        public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //// Author
@@ -107,6 +110,8 @@ namespace BookStore.API.Data
                 new BookCategory { BookId = 1, CategoryId = 1 },
                 new BookCategory { BookId = 1, CategoryId = 2 },
                 new BookCategory { BookId = 2, CategoryId = 1 });
+
+     
             base.OnModelCreating(modelBuilder);
         }
     }

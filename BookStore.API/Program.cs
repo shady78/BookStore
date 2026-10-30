@@ -1,4 +1,5 @@
 using BookStore.API.Common.Interfaces;
+using BookStore.API.Data.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.Configure<BookStoreSettings>(
 
 builder.Services.AddDbContext<BookStoreDbContext>(options =>
 options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = true;
@@ -96,6 +97,14 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 
 //builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 var app = builder.Build();
+// startup code
+using(var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BookStoreDbContext>();
+
+    await dbContext.Database.MigrateAsync();
+    await PermissionSeeder.SeedAsync(dbContext);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
